@@ -280,6 +280,14 @@ class FilesTabComponent {
 			}
 		}
 
+		// Keymap footer
+		lines.push(
+			th.fg(
+				"dim",
+				truncateToWidth(" j/k scroll │ g/G top/bot", width, ""),
+			),
+		);
+
 		this.cachedWidth = width;
 		this.cachedLines = lines;
 		return lines;
