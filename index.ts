@@ -140,7 +140,12 @@ function connector(isLast: boolean): string {
 // ── FilesTabComponent ─────────────────────────────────────────────────────
 
 class FilesTabComponent {
+	/** Max files tracked. Oldest evicted when exceeded. */
+	private static readonly MAX_FILES = 1_000;
+
 	private files: ToolMap = new Map();
+	/** Insertion order for LRU eviction. */
+	private fileOrder: string[] = [];
 	private scrollOffset = 0;
 	private followTail = true;
 	private theme: ThemeColors | null = null;
@@ -156,6 +161,7 @@ class FilesTabComponent {
 
 	reset(): void {
 		this.files.clear();
+		this.fileOrder = [];
 		this.scrollOffset = 0;
 		this.followTail = true;
 		this.flatList = [];
@@ -167,8 +173,17 @@ class FilesTabComponent {
 	}
 
 	addFile(filePath: string, tool: string): void {
+		// Track insertion order for new entries
+		if (!this.files.has(filePath)) {
+			this.fileOrder.push(filePath);
+		}
 		// Deduplicate: later tool overwrites earlier
 		this.files.set(filePath, tool);
+		// Evict oldest when over cap
+		while (this.files.size > FilesTabComponent.MAX_FILES) {
+			const oldest = this.fileOrder.shift();
+			if (oldest) this.files.delete(oldest);
+		}
 		this.rebuildFlatList();
 		this.invalidate();
 	}
