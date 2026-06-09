@@ -104,7 +104,11 @@ function buildTree(files: ToolMap): TreeNode[] {
 }
 
 /** Flatten tree into a list of visible (always-expanded) entries. */
-function flattenTree(nodes: TreeNode[], depth: number, ancestorLast: boolean[]): FlatEntry[] {
+function flattenTree(
+	nodes: TreeNode[],
+	depth: number,
+	ancestorLast: boolean[],
+): FlatEntry[] {
 	const result: FlatEntry[] = [];
 	for (let i = 0; i < nodes.length; i++) {
 		const isLast = i === nodes.length - 1;
@@ -117,7 +121,12 @@ function flattenTree(nodes: TreeNode[], depth: number, ancestorLast: boolean[]):
 		result.push(entry);
 		// Directories always expanded (no collapse toggle in files tab)
 		if (nodes[i]!.type === "directory" && nodes[i]!.children.length > 0) {
-			result.push(...flattenTree(nodes[i]!.children, depth + 1, [...ancestorLast, isLast]));
+			result.push(
+				...flattenTree(nodes[i]!.children, depth + 1, [
+					...ancestorLast,
+					isLast,
+				]),
+			);
 		}
 	}
 	return result;
@@ -128,7 +137,7 @@ function flattenTree(nodes: TreeNode[], depth: number, ancestorLast: boolean[]):
 function indentPrefix(ancestorLast: boolean[], depth: number): string {
 	let prefix = "";
 	for (let d = 0; d < depth; d++) {
-		prefix += (d >= ancestorLast.length || ancestorLast[d]) ? "    " : "│   ";
+		prefix += d >= ancestorLast.length || ancestorLast[d] ? "    " : "│   ";
 	}
 	return prefix;
 }
@@ -217,7 +226,10 @@ class FilesTabComponent {
 			return;
 		}
 		if (matchesKey(data, "pagedown")) {
-			this.scrollOffset = Math.min(maxScroll, this.scrollOffset + this.visibleArea);
+			this.scrollOffset = Math.min(
+				maxScroll,
+				this.scrollOffset + this.visibleArea,
+			);
 			if (this.scrollOffset >= maxScroll) this.followTail = true;
 			this.invalidate();
 			return;
@@ -249,7 +261,9 @@ class FilesTabComponent {
 		const lines: string[] = [];
 
 		if (this.flatList.length === 0) {
-			lines.push(th.fg("dim", truncateToWidth(" No files modified yet", width, "")));
+			lines.push(
+				th.fg("dim", truncateToWidth(" No files modified yet", width, "")),
+			);
 		} else {
 			const visible = this.flatList.slice(
 				this.scrollOffset,
@@ -266,7 +280,9 @@ class FilesTabComponent {
 					const dirName = th.fg("syntaxNumber", th.bold(node.name + "/"));
 					const line = ` ${pre}${conn}${dirName}`;
 					const vw = visibleWidth(line);
-					lines.push(vw > width ? truncateToWidth(line, width, "…", false) : line);
+					lines.push(
+						vw > width ? truncateToWidth(line, width, "…", false) : line,
+					);
 				} else {
 					// Files: tool tag + name
 					const isWrite = node.tool === "write";
@@ -275,17 +291,17 @@ class FilesTabComponent {
 						: th.fg("warning", "[E]");
 					const line = ` ${pre}${conn}${tag} ${node.name}`;
 					const vw = visibleWidth(line);
-					lines.push(vw > width ? truncateToWidth(line, width, "…", false) : line);
+					lines.push(
+						vw > width ? truncateToWidth(line, width, "…", false) : line,
+					);
 				}
 			}
 		}
 
-		// Keymap footer
+		// Keymap footer (pinned to bottom of 40-line viewport)
+		while (lines.length < 39) lines.push("");
 		lines.push(
-			th.fg(
-				"dim",
-				truncateToWidth(" j/k scroll │ g/G top/bot", width, ""),
-			),
+			th.fg("dim", truncateToWidth(" j/k scroll │ g/G top/bot", width, "")),
 		);
 
 		this.cachedWidth = width;
