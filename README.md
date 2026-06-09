@@ -1,6 +1,6 @@
 # pi-sidepanel-outputs
 
-Interactive file output tracker tab for [pi-sidepanel](../pi-sidepanel). Shows all files modified by the agent during the current session via `write` and `edit` tools, rendered as an always-expanded tree. Keyboard navigable with theme colors. Persists across pi restarts via session replay.
+Interactive file output tracker tab for [pi-sidepanel](https://github.com/WernerVdM97/pi-sidepanel). Shows all files modified by the agent during the current session via `write` and `edit` tools, rendered as an always-expanded tree. Keyboard navigable with theme colors. Persists across pi restarts via session replay.
 
 <p align="center"><em>👆 Interactive — use keyboard to scroll through modified files</em></p>
 
@@ -40,11 +40,11 @@ Deduplication: if the same file is touched by both `write` and `edit`, the later
 
 ## Session persistence
 
-On `session_start`, the tab replays all `write` and `edit` tool calls from the session history (capped at last 1,000 entries). Paths are displayed relative to the working directory.
+On `session_start`, the tab replays all `write` and `edit` tool calls from the session history (capped at last 300 entries). Paths are displayed relative to the working directory.
 
 ## Memory safety
 
-Files list capped at **1,000 entries** with LRU eviction of oldest entries.
+Files list capped at **300 entries** with LRU eviction of oldest entries.
 
 ## Architecture
 

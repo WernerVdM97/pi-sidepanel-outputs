@@ -141,7 +141,7 @@ function connector(isLast: boolean): string {
 
 class FilesTabComponent {
 	/** Max files tracked. Oldest evicted when exceeded. */
-	private static readonly MAX_FILES = 1_000;
+	private static readonly MAX_FILES = 300;
 
 	private files: ToolMap = new Map();
 	/** Insertion order for LRU eviction. */
@@ -345,7 +345,7 @@ export default function (pi: ExtensionAPI) {
 			}>;
 
 			const cwd = process.cwd();
-			const capped = entries.slice(-1000);
+			const capped = entries.slice(-300);
 			for (const e of capped) {
 				if (e.type !== "message") continue;
 				const m = e.message;
