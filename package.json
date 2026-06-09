@@ -1,0 +1,10 @@
+{
+  "name": "pi-sidepanel-outputs",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Outputs tree tab for pi-sidepanel — shows files modified by the agent as a tree, persisted across sessions",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./index.ts"]
+  }
+}
