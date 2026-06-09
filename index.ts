@@ -355,6 +355,9 @@ export default function (pi: ExtensionAPI) {
 		registered = false;
 		filesComponent.reset();
 
+		// Register tab immediately — framework shows empty state while we replay
+		registerTab();
+
 		try {
 			const entries = ctx.sessionManager.getEntries() as Array<{
 				type: string;
@@ -389,8 +392,9 @@ export default function (pi: ExtensionAPI) {
 					}
 				}
 			}
-		} finally {
-			registerTab();
+			pi.events.emit("sidepanel:invalidate", { tabId: "files" });
+		} catch {
+			// Replay failed — tab already registered with empty state
 		}
 	});
 
