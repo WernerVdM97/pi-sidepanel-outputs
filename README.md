@@ -1,5 +1,7 @@
 # pi-sidepanel-outputs
 
+> 🤖 This code is an AI-generated proof-of-concept. Use at your own risk.
+
 Interactive file output tracker tab for [pi-sidepanel](https://github.com/WernerVdM97/pi-sidepanel). Shows all files modified by the agent during the current session via `write` and `edit` tools, rendered as an always-expanded tree. Keyboard navigable with theme colors. Persists across pi restarts via session replay.
 
 <p align="center"><em>👆 Interactive — use keyboard to scroll through modified files</em></p>
