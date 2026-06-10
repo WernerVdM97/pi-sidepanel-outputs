@@ -52,7 +52,9 @@ Files list capped at **300 entries** with LRU eviction of oldest entries.
 
 ```
 pi-sidepanel-outputs
-  └── index.ts   — flat tree model, rendering, event wiring
+  ├── index.ts   — event wiring + registration (thin)
+  └── files.ts   — flat tree model + rendering (no pi imports;
+                    pi-tui utilities injected — testable in isolation)
 ```
 
 ## License
